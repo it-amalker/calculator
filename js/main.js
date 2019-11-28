@@ -37,20 +37,23 @@ function detect(value) {
 function getSymbol(value) {
   console.log('Function get a symbol ' + value);
   switch (value) {
+
     case 'C':
       buffer = '0';
       runningTotal = 0;
       previousOperator = null;
       break;
+
     case '=':
       if (previousOperator === null) {
         return;
       }
-      // calculate(parseInt(buffer));
+      doMath(parseInt(buffer));
       previousOperator = null;
       buffer = '' + runningTotal;
       runningTotal = 0;
       break;
+
     case '←':
       if (buffer.length === 1) {
         console.log(buffer);
@@ -60,8 +63,9 @@ function getSymbol(value) {
         buffer = buffer.slice(0, -1);
       }
       break;
+
     default:
-      makeCalculation();
+      getMathSign(value);
       break;
   }
 }
@@ -76,6 +80,31 @@ function getNumber(value) {
 
 function showOnDisplay() {
   display.innerText = buffer;
+}
+
+function getMathSign(value) {
+  const bufferInt = parseInt(buffer);
+  if (runningTotal === 0) {
+    runningTotal = bufferInt;
+  } else {
+    doMath(bufferInt);
+  }
+
+  previousOperator = value;
+
+  buffer = '0';
+}
+
+function doMath(bufferInt) {
+  if (previousOperator === '+') {
+    runningTotal += bufferInt;
+  } else if (previousOperator === '-') {
+    runningTotal -= bufferInt;
+  } else if (previousOperator === '×') {
+    runningTotal *= bufferInt;
+  } else {
+    runningTotal /= bufferInt;
+  }
 }
 
 
